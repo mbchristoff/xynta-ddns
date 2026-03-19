@@ -1,0 +1,23 @@
+# Xynta DDNS client configuration
+#
+# Each client entry contains a secret API token and a list of DNS records
+# the bearer of that token is allowed to update.
+#
+# The token is sent by the DDNS client in the POST body; it does NOT need to
+# be the same as your Xynta HostFact API key.
+
+clients:
+  - token: "changeme-secret-token-1"
+    records:
+      - domain: "example"
+        tld: "nl"
+        name: "@"
+
+  - token: "changeme-secret-token-2"
+    records:
+      - domain: "example"
+        tld: "nl"
+        name: "home"
+      - domain: "example"
+        tld: "com"
+        name: "@"

@@ -1,0 +1,14 @@
+services:
+  ddns:
+    build: .
+    ports:
+      - "80:8000"
+    environment:
+      # Required: your Xynta HostFact API key
+      - DDNS_XYNTA_API_KEY=your-xynta-api-key
+      # Optional overrides (defaults shown):
+      # - DDNS_XYNTA_API_URL=https://api.xynta.com/
+      # - DDNS_CONFIG_FILE=/app/config.yml
+    volumes:
+      - ./config.yml:/app/config.yml:ro
+    restart: unless-stopped
