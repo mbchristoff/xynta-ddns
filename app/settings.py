@@ -6,7 +6,8 @@ class Settings(BaseSettings):
 
     # Xynta HostFact API settings
     xynta_api_url: str = "https://api.xynta.com/"
-    xynta_api_key: str
+    xynta_api_user_id: str
+    xynta_api_ip_hash: str
 
     # Path to the DDNS clients config file
     config_file: str = "/app/config.yml"

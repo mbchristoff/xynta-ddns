@@ -16,10 +16,11 @@ class XyntaClient:
 
     def __init__(self) -> None:
         self._api_url = settings.xynta_api_url.rstrip("/") + "/"
-        self._api_key = settings.xynta_api_key
+        self._user_id = settings.xynta_api_user_id
+        self._ip_hash = settings.xynta_api_ip_hash
 
     def _base_payload(self) -> dict[str, Any]:
-        return {"api_key": self._api_key, "module": "domains"}
+        return {"api_key": self._ip_hash, "UserID": self._user_id, "module": "domains"}
 
     async def show_dns_zone(self, domain: str, tld: str) -> list[dict[str, Any]]:
         """Return the current list of DNS records for *domain*.*tld*."""

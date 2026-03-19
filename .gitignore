@@ -25,6 +25,10 @@ htmlcov/
 # dotenv
 .env
 
+# DDNS config files (contain secrets)
+config.yml
+config.yaml
+
 # Docker
 *.override.yml
 

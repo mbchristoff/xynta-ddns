@@ -11,7 +11,8 @@ import pytest
 from fastapi.testclient import TestClient
 
 # Set required env vars before importing the app
-os.environ.setdefault("DDNS_XYNTA_API_KEY", "test-xynta-key")
+os.environ.setdefault("DDNS_XYNTA_API_USER_ID", "test-user-id")
+os.environ.setdefault("DDNS_XYNTA_API_IP_HASH", "test-ip-hash")
 os.environ.setdefault("DDNS_XYNTA_API_URL", "https://api.xynta.example/")
 
 
