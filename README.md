@@ -25,6 +25,9 @@ Edit `.env` and set:
 | `DDNS_XYNTA_API_URL` | *(optional)* Xynta API base URL (default: `https://api.xynta.com/`) |
 | `DDNS_CONFIG_FILE` | *(optional)* Path to the clients config file inside the container (default: `/app/config.yml`) |
 | `DDNS_VERBOSE` | *(optional)* Log Xynta API payloads and responses at DEBUG level (default: `false`) |
+| `DDNS_UVICORN_HOST` | *(optional)* Host address for uvicorn to bind to (default: `0.0.0.0`) |
+| `DDNS_UVICORN_PORT` | *(optional)* Port for uvicorn to listen on (default: `8000`) |
+| `DDNS_UVICORN_FORWARDED_ALLOW_IPS` | *(optional)* IPs/CIDRs trusted to set `X-Forwarded-For` (default: `*` — trust all; restrict to your reverse proxy IP in production) |
 
 ### 2. Create the client config
 

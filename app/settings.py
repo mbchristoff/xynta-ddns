@@ -15,5 +15,10 @@ class Settings(BaseSettings):
     # Enable verbose logging of Xynta API payloads and responses
     verbose: bool = False
 
+    # Uvicorn server settings
+    uvicorn_host: str = "0.0.0.0"
+    uvicorn_port: int = 8000
+    uvicorn_forwarded_allow_ips: str = "*"
+
 
 settings = Settings()
