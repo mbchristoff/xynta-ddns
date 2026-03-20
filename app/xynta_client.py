@@ -1,9 +1,12 @@
 
+import logging
 from typing import Any
 import json
 import httpx
 
 from .settings import settings
+
+logger = logging.getLogger(__name__)
 
 
 class XyntaClientError(Exception):
@@ -62,14 +65,14 @@ class XyntaClient:
             "DNSZone": json.dumps(dns_zone_obj) if records else '',
         }
         form_payload = {k: '' if v is None else str(v) for k, v in payload.items()}
-        print(payload)
+        logger.debug("edit_dns_zone payload: %s", payload)
 
         async with httpx.AsyncClient() as client:
             response = await client.post(self._api_url, data=form_payload)
             response.raise_for_status()
 
         data = response.json()
-        print(json.dumps(data, indent=2))
+        logger.debug("edit_dns_zone response: %s", data)
         # Check for success in the response, similar to show_dns_zone
         try:
             status = data['0']['status']

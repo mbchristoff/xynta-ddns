@@ -77,6 +77,7 @@ Updates DNS records if the caller's IP has changed.
 | Response | Meaning |
 |---|---|
 | `{"status": "unauthorized"}` | Unknown token or no permitted records in the request |
+| `{"status": "error", "message": "No matching record(s) found on Xynta: ..."}` | Requested record(s) do not exist in the DNS zone |
 | `{"status": "unchanged"}` | Client IP matches all requested A/AAAA records |
 | `{"status": "updated"}` | Records were updated successfully |
 | `{"status": "error", "message": "..."}` | Xynta API error |
