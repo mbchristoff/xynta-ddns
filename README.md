@@ -24,6 +24,7 @@ Edit `.env` and set:
 | `DDNS_XYNTA_API_IP_HASH` | The IP-hash (API key) from your Xynta account |
 | `DDNS_XYNTA_API_URL` | *(optional)* Xynta API base URL (default: `https://api.xynta.com/`) |
 | `DDNS_CONFIG_FILE` | *(optional)* Path to the clients config file inside the container (default: `/app/config.yml`) |
+| `DDNS_VERBOSE` | *(optional)* Log Xynta API payloads and responses at DEBUG level (default: `false`) |
 
 ### 2. Create the client config
 

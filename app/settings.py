@@ -12,5 +12,8 @@ class Settings(BaseSettings):
     # Path to the DDNS clients config file
     config_file: str = "/app/config.yml"
 
+    # Enable verbose logging of Xynta API payloads and responses
+    verbose: bool = False
+
 
 settings = Settings()
