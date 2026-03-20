@@ -8,6 +8,24 @@ DDNS service for Xynta DNS
 
 ---
 
+## Container image
+
+Pre-built images are published to the GitHub Container Registry on every push:
+
+```
+ghcr.io/mbchristoff/xynta-ddns:latest   # latest build from main
+ghcr.io/mbchristoff/xynta-ddns:main     # current main branch build
+ghcr.io/mbchristoff/xynta-ddns:<branch> # sanitized branch-name build
+```
+
+Pull the latest image:
+
+```bash
+docker pull ghcr.io/mbchristoff/xynta-ddns:latest
+```
+
+---
+
 ## Quick start
 
 ### 1. Copy and fill in the environment file
