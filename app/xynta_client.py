@@ -1,7 +1,6 @@
-from __future__ import annotations
 
 from typing import Any
-
+import json
 import httpx
 
 from .settings import settings
@@ -20,44 +19,61 @@ class XyntaClient:
         self._ip_hash = settings.xynta_api_ip_hash
 
     def _base_payload(self) -> dict[str, Any]:
-        return {"api_key": self._ip_hash, "UserID": self._user_id, "module": "domains"}
+        return {
+            "uid": self._user_id,
+            "hash": self._ip_hash,
+            "m": "domains",
+        }
 
     async def show_dns_zone(self, domain: str, tld: str) -> list[dict[str, Any]]:
         """Return the current list of DNS records for *domain*.*tld*."""
         payload = {
             **self._base_payload(),
-            "action": "show-dns-zone",
+            "a": "show-dns-zone",
+            "t": None,
+            "test": None,
             "Domain": domain,
             "Tld": tld,
         }
+        form_payload = {k: '' if v is None else str(v) for k, v in payload.items()}
         async with httpx.AsyncClient() as client:
-            response = await client.post(self._api_url, json=payload)
+            response = await client.post(self._api_url, data=form_payload)
             response.raise_for_status()
 
         data = response.json()
-        if data.get("status") != "success":
-            raise XyntaClientError(
-                f"show-dns-zone failed: {data.get('message', data.get('status'))}"
-            )
-        return data["data"].get("Records", [])
+        try:
+            records = data['0']['results'][0]['dns_zone']['records']
+        except Exception:
+            raise XyntaClientError(f"show-dns-zone failed: {data}")
+        return records
 
     async def edit_dns_zone(
         self, domain: str, tld: str, records: list[dict[str, Any]]
     ) -> None:
         """Replace the DNS zone for *domain*.*tld* with *records*."""
+        dns_zone_obj = {"records": records}
         payload = {
             **self._base_payload(),
-            "action": "edit-dns-zone",
+            "a": "edit-dns-zone",
+            "t": None,
+            "test": None,
             "Domain": domain,
             "Tld": tld,
-            "Records": records,
+            "DNSZone": json.dumps(dns_zone_obj) if records else '',
         }
+        form_payload = {k: '' if v is None else str(v) for k, v in payload.items()}
+        print(payload)
+
         async with httpx.AsyncClient() as client:
-            response = await client.post(self._api_url, json=payload)
+            response = await client.post(self._api_url, data=form_payload)
             response.raise_for_status()
 
         data = response.json()
-        if data.get("status") != "success":
-            raise XyntaClientError(
-                f"edit-dns-zone failed: {data.get('message', data.get('status'))}"
-            )
+        print(json.dumps(data, indent=2))
+        # Check for success in the response, similar to show_dns_zone
+        try:
+            status = data['0']['status']
+        except Exception:
+            raise XyntaClientError(f"edit-dns-zone failed: {data}")
+        if status != 'success':
+            raise XyntaClientError(f"edit-dns-zone failed: {data}")

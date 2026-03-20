@@ -77,7 +77,7 @@ async def update(request: Request, body: UpdateRequest) -> JSONResponse:
     all_unchanged = True
     errors: list[str] = []
 
-    # Group records by (domain, tld) to minimise API calls
+    # Group records by (domain, tld) to minimize API calls
     zones: dict[tuple[str, str], list[str]] = {}
     for rec in records_to_process:
         key = (rec.domain, rec.tld)
@@ -90,11 +90,34 @@ async def update(request: Request, body: UpdateRequest) -> JSONResponse:
             errors.append(str(exc))
             continue
 
+        # Check if each client-requested record matches a record from Xynta
+        unmatched = []
+        for r in records_to_process:
+            if r.domain == domain and r.tld == tld:
+                found = any(
+                    rec.get("name") == r.name
+                    for rec in current_records
+                )
+                if not found:
+                    if r.name:
+                        unmatched.append(f"{r.name}.{r.domain}.{r.tld}")
+                    else:
+                        unmatched.append(f"{r.domain}.{r.tld}")
+
+        if unmatched:
+            return JSONResponse(
+                status_code=400,
+                content=UpdateResponse(
+                    status="error",
+                    message=f"No matching record(s) found on Xynta: {', '.join(unmatched)}",
+                ).model_dump(exclude_none=True),
+            )
+
         # Check whether any A/AAAA record for the requested names differs
         needs_update = False
         for rec in current_records:
-            if rec.get("Name") in names and rec.get("Type") in ("A", "AAAA"):
-                if rec.get("Value") != client_ip:
+            if rec.get("name") in names and rec.get("type") in ("A", "AAAA"):
+                if rec.get("value") != client_ip:
                     needs_update = True
                     break
 
@@ -106,10 +129,9 @@ async def update(request: Request, body: UpdateRequest) -> JSONResponse:
         # Build updated record list: replace A/AAAA values for the requested names
         updated_records = []
         for rec in current_records:
-            if rec.get("Name") in names and rec.get("Type") in ("A", "AAAA"):
-                updated_records.append({**rec, "Value": client_ip})
-            else:
-                updated_records.append(rec)
+            if rec["name"] in names and rec["type"] in ("A", "AAAA"):
+                rec["value"] = client_ip
+            updated_records.append(rec)
 
         try:
             await xynta.edit_dns_zone(domain, tld, updated_records)
@@ -118,7 +140,7 @@ async def update(request: Request, body: UpdateRequest) -> JSONResponse:
 
     if errors:
         return JSONResponse(
-            status_code=502,
+            status_code=503,
             content=UpdateResponse(
                 status="error",
                 message="; ".join(errors),
