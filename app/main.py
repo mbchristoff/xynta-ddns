@@ -20,6 +20,9 @@ _config: Config | None = None
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     global _config
+    # Configure logging before anything else
+    log_level = logging.DEBUG if getattr(settings, "verbose", False) else logging.INFO
+    logging.basicConfig(level=log_level, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
     _config = load_config(settings.config_file)
     logger.info("Loaded config from %s", settings.config_file)
     yield
