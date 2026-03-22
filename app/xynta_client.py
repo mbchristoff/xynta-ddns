@@ -1,7 +1,6 @@
-
+import json
 import logging
 from typing import Any
-import json
 import httpx
 
 from .settings import settings

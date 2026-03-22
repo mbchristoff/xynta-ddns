@@ -48,7 +48,6 @@ def config_file(tmp_path: Path) -> str:
 @pytest.fixture()
 def client(config_file: str):
     """Return a TestClient with config loaded from the temp file."""
-    import importlib
     import app.main as main_module
 
     # Reload settings-dependent modules to pick up any env changes

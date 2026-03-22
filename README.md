@@ -110,10 +110,10 @@ Updates DNS records if the caller's IP has changed.
 
 ## Development
 
-Install dependencies:
+Install dependencies (includes test requirements):
 
 ```bash
-pip install -r requirements.txt
+pip install -r requirements-test.txt
 ```
 
 Run the app locally (requires `.env` with credentials):
